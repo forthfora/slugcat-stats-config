@@ -1,0 +1,12 @@
+{
+	"id": "slugcatstatsconfig",
+	"name": "Slugcat Stats Config",
+	"version": "1.0.0",
+	"target_game_version": "v1.9.06",
+	"authors": "forthbridge",
+	"description": "Provides a Remix config for most of slugcat's stats.",
+	"requirements": [],
+	"requirements_names": [],
+	"tags": ["Game Mechanics", "Tools"],
+	"checksum_override_version": false
+}
