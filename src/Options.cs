@@ -107,7 +107,7 @@ namespace SlugcatStatsConfig
             AddNewLine();
             AddBox();
         }
-        private void AddDraggerInt(Configurable<float> configurable, string text)
+        private void AddDraggerFloat(Configurable<float> configurable, string text)
         {
             draggerFloatConfigurables.Add(configurable);
             draggerFloatTextLabels.Add(new OpLabel(new Vector2(), new Vector2(), text, FLabelAlignment.Left));
@@ -119,7 +119,7 @@ namespace SlugcatStatsConfig
             draggerIntTextLabels.Add(new OpLabel(new Vector2(), new Vector2(), text, FLabelAlignment.Left));
         }
 
-        private void DrawFloatDraggers(ref OpTab tab) // changes pos.y but not pos.x
+        private void DrawFloatDraggers(ref OpTab tab)
         {
             if (draggerFloatConfigurables.Count != draggerFloatTextLabels.Count) return;
 
@@ -163,16 +163,16 @@ namespace SlugcatStatsConfig
             draggerFloatTextLabels.Clear();
         }
 
-        private void DrawIntDraggers(ref OpTab tab) // changes pos.y but not pos.x
+        private void DrawIntDraggers(ref OpTab tab)
         {
-            if (draggerFloatConfigurables.Count != draggerFloatTextLabels.Count) return;
+            if (draggerIntConfigurables.Count != draggerIntTextLabels.Count) return;
 
             float width = marginX.y - marginX.x;
             float elementWidth = (width - (numberOfDraggers - 1) * 0.5f * spacing) / numberOfDraggers;
             pos.y -= draggerSize;
             float _posX = pos.x;
 
-            for (int i = 0; i < draggerFloatConfigurables.Count; ++i)
+            for (int i = 0; i < draggerIntConfigurables.Count; ++i)
             {
                 Configurable<int> configurable = draggerIntConfigurables[i];
 
@@ -183,7 +183,7 @@ namespace SlugcatStatsConfig
                 tab.AddItems(dragger);
                 _posX += DraggerWithSpacing;
 
-                OpLabel draggerLabel = draggerFloatTextLabels[i];
+                OpLabel draggerLabel = draggerIntTextLabels[i];
                 draggerLabel.pos = new Vector2(_posX, pos.y + 2f);
                 draggerLabel.size = new Vector2(elementWidth - DraggerWithSpacing, fontHeight);
                 tab.AddItems(draggerLabel);
