@@ -13,7 +13,7 @@ using System.Security;
 namespace SlugcatStatsConfig
 {
     [BepInPlugin(AUTHOR + "." + MOD_ID, MOD_NAME, VERSION)]
-    internal class SlugcatStatsConfig : BaseUnityPlugin
+    internal class Plugin : BaseUnityPlugin
     {
         public static new ManualLogSource Logger { get; private set; } = null!;
 

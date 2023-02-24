@@ -13,15 +13,127 @@ namespace SlugcatStatsConfig
 
         #region Options
 
-        public static Configurable<int> hibernationFood = instance.config.Bind("hibernationFood", 100, new ConfigurableInfo(
-            "Number of food pips necessary to hibernate.",
-            new ConfigAcceptableRange<int>(-1, 20), "", "Hibernation Food"));
+        public static Configurable<bool> canMaul = instance.config.Bind("canMaul", false, new ConfigurableInfo(
+            "Whether all slugcats can maul held creatures, normally exclusive to Artificer and Inv.",
+            null, "", "Can Maul?"));
 
-        public static Configurable<int> extraFood = instance.config.Bind("extraFood", 20, new ConfigurableInfo(
+        public static Configurable<bool> autoGrabBatflies = instance.config.Bind("autoGrabBatflies", false, new ConfigurableInfo(
+            "Whether all slugcats automatically grab batflies when nearby.",
+            null, "", "Auto Grab Batflies?"));
+
+        public static Configurable<float> spearSpawnChanceModifier = instance.config.Bind("spearSpawnChanceModifier", -0.1f, new ConfigurableInfo(
+            "Determines chance modifier for a normal spear to spawn. Less is more likely." +
+            "\nSurvivor = Pow 1, Hunter = Pow 0.85, Saint = Pow 1.4",
+            new ConfigAcceptableRange<float>(-0.1f, 2.0f), "", "Spear Spawn Chance Modifier"));
+
+        public static Configurable<float> explosiveSpearSpawnChance = instance.config.Bind("explosiveSpearSpawnChance", -0.1f, new ConfigurableInfo(
+            "Determines chance for an explosive spear to spawn. Higher is more likely." +
+            "\nSurvivor = 0.0, Artificer = 0.012",
+            new ConfigAcceptableRange<float>(-0.1f, 1.0f), "", "Explosive Spear Spawn Chance"));
+
+        public static Configurable<float> electricSpearSpawnChance = instance.config.Bind("electricSpearSpawnChance", -0.1f, new ConfigurableInfo(
+            "Determines chance for an electric spear to spawn. Higher is more likely." +
+            "\nSurvivor = 0.0, Artificer = 0.065",
+            new ConfigAcceptableRange<float>(-0.1f, 1.0f), "", "Electric Spear Spawn Chance"));
+
+
+
+        public static Configurable<int> hibernationFood = instance.config.Bind("hibernationFood", -1, new ConfigurableInfo(
+            "Number of food pips necessary to hibernate.",
+            new ConfigAcceptableRange<int>(-1, int.MaxValue / 2), "", "Hibernation Food"));
+
+        public static Configurable<int> extraFood = instance.config.Bind("extraFood", -1, new ConfigurableInfo(
             "Number of food pips that can be stored as extra.",
-            new ConfigAcceptableRange<int>(-1, 20), "", "Extra Food"));
+            new ConfigAcceptableRange<int>(-1, int.MaxValue / 2), "", "Extra Food"));
+
+        public static Configurable<float> lungsFac = instance.config.Bind("lungsFac", -0.1f, new ConfigurableInfo(
+            "Determines lung capacity. LOWER values mean slugcat can hold their breath for longer." +
+            "\nSurvivor = 1.0, Rivulet = 0.15, Monk = 1.2",
+            new ConfigAcceptableRange<float>(-0.1f, 2.0f), "", "Lungs Factor"));
+
+        public static Configurable<float> generalVisibilityBonus = instance.config.Bind("generalVisibilityBonus", -1.1f, new ConfigurableInfo(
+            "A bonus on how easily slugcat is spotted by other creatures (minimum reverts to default). Lower is less visible." +
+            "\nSurvivor = 0.0, Monk = -0.1, Gourmand = 0.3",
+            new ConfigAcceptableRange<float>(-1.1f, 1.0f), "", "Visibility Bonus"));
+
+        public static Configurable<float> visualStealthInSneakMode = instance.config.Bind("visualStealthInSneakMode", -0.1f, new ConfigurableInfo(
+            "Determines how easily slugcat is spotted by other creatures when crawling. Higher is less visible." +
+            "\nSurvivor = 0.5, Gourmand = 0.2, Monk = 0.6",
+            new ConfigAcceptableRange<float>(-0.1f, 1.0f), "", "Crawling Stealth"));
+
+        public static Configurable<float> loudnessFac = instance.config.Bind("loudnessFac", -0.1f, new ConfigurableInfo(
+            "Determines how easily slugcat is heard by other creatures. Lower is more quiet." +
+            "\nSurvivor = 1.0, Gourmand = 1.5, Monk = 0.75",
+            new ConfigAcceptableRange<float>(-0.1f, 2.0f), "", "Loudness Factor"));
+
+
+
+        public static Configurable<int> throwingSkill = instance.config.Bind("throwingSkill", -1, new ConfigurableInfo(
+            "Determines throwing velocity, spear damage, throw delay, etc. Higher values are better" +
+            "\nMonk = 0, Survivor = 1, Hunter = 2",
+            new ConfigAcceptableRange<int>(-1, 2), "", "Throwing Skill"));
+
+        public static Configurable<float> poleClimbSpeedFac = instance.config.Bind("poleClimbSpeedFac", -0.1f, new ConfigurableInfo(
+            "Determines how quickly slugcat can climb poles." +
+            "\nSurvivor = 1.0, Rivulet = 1.8",
+            new ConfigAcceptableRange<float>(-0.1f, 5.0f), "", "Pole Climb Speed Factor"));
+
+        public static Configurable<float> corridorClimbSpeedFac = instance.config.Bind("corridorClimbSpeedFac", -0.1f, new ConfigurableInfo(
+            "Determines how quickly slugcat can climb through corridors." +
+            "\nSurvivor = 1.0, Rivulet = 1.6",
+            new ConfigAcceptableRange<float>(-0.1f, 5.0f), "", "Corridor Climb Speed Factor"));
+
+        public static Configurable<float> runspeedFac = instance.config.Bind("runspeedFac", -0.1f, new ConfigurableInfo(
+            "Determines how fast slugcat can run." +
+            "\nSurvivor = 1.0, Rivulet = 1.75",
+            new ConfigAcceptableRange<float>(-0.1f, 5.0f), "", "Run Speed Factor"));
+
+        public static Configurable<float> bodyWeightFac = instance.config.Bind("bodyWeightFac", -0.1f, new ConfigurableInfo(
+            "Determines slugcat's weight." +
+            "\nSurvivor = 1.0, Spearmaster = 0.85, Gourmand = 1.35",
+            new ConfigAcceptableRange<float>(-0.1f, 5.0f), "", "Body Weight Factor"));
+
 
         #endregion
+
+        #region Options Starving
+
+        public static Configurable<int> throwingSkillStarving = instance.config.Bind("throwingSkillStarving", -1, new ConfigurableInfo(
+            "Determines throwing velocity, spear damage, throw delay, etc. Higher values are better" +
+            "\nDefault = 0, Gourmand = 2",
+            new ConfigAcceptableRange<int>(-1, 2), "", "Starving Throwing Skill"));
+
+        public static Configurable<float> poleClimbSpeedFacStarving = instance.config.Bind("poleClimbSpeedFacStarving", -0.1f, new ConfigurableInfo(
+            "Determines how quickly slugcat can climb poles." +
+            "\nSurvivor = 0.8, Rivulet = 1.1",
+            new ConfigAcceptableRange<float>(-0.1f, 5.0f), "", "Starving Pole Climb Speed Factor"));
+
+        public static Configurable<float> corridorClimbSpeedFacStarving = instance.config.Bind("corridorClimbSpeedFacStarving", -0.1f, new ConfigurableInfo(
+            "Determines how quickly slugcat can climb through corridors." +
+            "\nSurvivor = 0.86, Rivulet = 1.2",
+            new ConfigAcceptableRange<float>(-0.1f, 5.0f), "", "Starving Corridor Climb Speed Factor"));
+
+        public static Configurable<float> runspeedFacStarving = instance.config.Bind("runspeedFacStarving", -0.1f, new ConfigurableInfo(
+            "Determines how fast slugcat can run." +
+            "\nSurvivor = 0.875, Rivulet = 1.27",
+            new ConfigAcceptableRange<float>(-0.1f, 5.0f), "", "Starving Run Speed Factor"));
+
+        public static Configurable<float> bodyWeightFacStarving = instance.config.Bind("bodyWeightFacStarving", -0.1f, new ConfigurableInfo(
+            "Determines slugcat's weight." +
+            "\nSurvivor = 0.9, Gourmand = 1.15",
+            new ConfigAcceptableRange<float>(-0.1f, 5.0f), "", "Starving Body Weight Factor"));
+
+        #endregion
+
+        public static Configurable<bool> forceGlow = instance.config.Bind("forceGlow", false, new ConfigurableInfo(
+            "Whether all slugcats will be forced to have the neuron glow effect. Not persistent.",
+            null, "", "Force Glow?"));
+
+        public static Configurable<float> extraJumpBoost = instance.config.Bind("extraJumpBoost", -10.1f, new ConfigurableInfo(
+            "Determines extra jump power. Will only be added/subtracted ontop of the normal jump's power." +
+            "\nBase Jump: Survivor = 8.0, Rivulet = 14.0",
+            new ConfigAcceptableRange<float>(-10.1f, 10.0f), "", "Extra Jump Boost"));
+
 
         #region Parameters
         private readonly float spacing = 20f;
@@ -43,8 +155,10 @@ namespace SlugcatStatsConfig
 
         private readonly List<float> boxEndPositions = new();
 
-        private readonly List<Configurable<float>> draggerFloatConfigurables = new();
-        private readonly List<OpLabel> draggerFloatTextLabels = new();
+        private readonly List<Configurable<float>> floatSliderConfigurables = new();
+        private readonly List<string> floatSliderMainTextLabels = new();
+        private readonly List<OpLabel> floatSliderTextLabelsLeft = new();
+        private readonly List<OpLabel> floatSliderTextLabelsRight = new();
 
         private readonly List<Configurable<int>> draggerIntConfigurables = new();
         private readonly List<OpLabel> draggerIntTextLabels = new();
@@ -65,7 +179,7 @@ namespace SlugcatStatsConfig
         private readonly List<OpLabel> textLabels = new();
         #endregion
 
-        private const int NUMBER_OF_TABS = 2;
+        private const int NUMBER_OF_TABS = 5;
 
         public override void Initialize()
         {
@@ -73,18 +187,78 @@ namespace SlugcatStatsConfig
             Tabs = new OpTab[NUMBER_OF_TABS];
             int tabIndex = -1;
 
-            AddTab(ref tabIndex, "Misc");
+            // Miscellaneous stats that are unaffected by starving
+            AddTab(ref tabIndex, "General");
 
-            AddDraggerInt(hibernationFood, (string)hibernationFood.info.Tags[0]);
-            AddDraggerInt(extraFood, (string)extraFood.info.Tags[0]);
-            DrawIntDraggers(ref Tabs[tabIndex]);
+            AddDragger(hibernationFood, (string)hibernationFood.info.Tags[0]);
+            AddDragger(extraFood, (string)extraFood.info.Tags[0]);
+            DrawDraggers(ref Tabs[tabIndex]);
 
-            AddNewLine(18);
+            AddCheckBox(canMaul, (string)canMaul.info.Tags[0]);
+            AddCheckBox(autoGrabBatflies, (string)autoGrabBatflies.info.Tags[0]);
+            DrawCheckBoxes(ref Tabs[tabIndex]);
+
+            AddNewLine(1);
+
+            AddFloatSlider(lungsFac, (string)lungsFac.info.Tags[0]);
+
+            AddFloatSlider(generalVisibilityBonus, (string)generalVisibilityBonus.info.Tags[0]);
+            AddFloatSlider(visualStealthInSneakMode, (string)visualStealthInSneakMode.info.Tags[0]);
+            AddFloatSlider(loudnessFac, (string)loudnessFac.info.Tags[0]);
+            DrawFloatSliders(ref Tabs[tabIndex]);
+
+            AddNewLine(0);
             DrawBox(ref Tabs[tabIndex]);
 
-            AddTab(ref tabIndex, "Speed");
+            AddTab(ref tabIndex, "Extras");
 
-            AddNewLine(18);
+            AddCheckBox(forceGlow, (string)forceGlow.info.Tags[0]);
+            DrawCheckBoxes(ref Tabs[tabIndex]);
+
+            AddFloatSlider(extraJumpBoost, (string)extraJumpBoost.info.Tags[0]);
+            DrawFloatSliders(ref Tabs[tabIndex]);
+
+            AddNewLine(14);
+            DrawBox(ref Tabs[tabIndex]);
+
+            AddTab(ref tabIndex, "Normal");
+
+            AddDragger(throwingSkill, (string)throwingSkill.info.Tags[0]);
+            DrawDraggers(ref Tabs[tabIndex]);
+
+            AddFloatSlider(bodyWeightFac, (string)bodyWeightFac.info.Tags[0]);
+            AddFloatSlider(runspeedFac, (string)runspeedFac.info.Tags[0]);
+            AddFloatSlider(poleClimbSpeedFac, (string)poleClimbSpeedFac.info.Tags[0]);
+            AddFloatSlider(corridorClimbSpeedFac, (string)corridorClimbSpeedFac.info.Tags[0]);
+            DrawFloatSliders(ref Tabs[tabIndex]);
+
+
+            AddNewLine(4);
+            DrawBox(ref Tabs[tabIndex]);
+
+            AddTab(ref tabIndex, "Starving");
+
+            AddDragger(throwingSkillStarving, (string)throwingSkillStarving.info.Tags[0]);
+            DrawDraggers(ref Tabs[tabIndex]);
+
+            AddFloatSlider(bodyWeightFacStarving, (string)bodyWeightFacStarving.info.Tags[0]);
+            AddFloatSlider(runspeedFacStarving, (string)runspeedFacStarving.info.Tags[0]);
+            AddFloatSlider(poleClimbSpeedFacStarving, (string)poleClimbSpeedFacStarving.info.Tags[0]);
+            AddFloatSlider(corridorClimbSpeedFacStarving, (string)corridorClimbSpeedFacStarving.info.Tags[0]);
+            DrawFloatSliders(ref Tabs[tabIndex]);
+
+            AddNewLine(4);
+            DrawBox(ref Tabs[tabIndex]);
+
+
+            AddTab(ref tabIndex, "Spear Spawns");
+
+            AddFloatSlider(spearSpawnChanceModifier, (string)spearSpawnChanceModifier.info.Tags[0]);
+            AddFloatSlider(explosiveSpearSpawnChance, (string)explosiveSpearSpawnChance.info.Tags[0]);
+            AddFloatSlider(electricSpearSpawnChance, (string)electricSpearSpawnChance.info.Tags[0]);
+            DrawFloatSliders(ref Tabs[tabIndex]);
+
+            AddNewLine(11);
             DrawBox(ref Tabs[tabIndex]);
         }
 
@@ -96,74 +270,93 @@ namespace SlugcatStatsConfig
             InitializeMarginAndPos();
 
             AddNewLine();
-            AddTextLabel(SlugcatStatsConfig.MOD_NAME, bigText: true);
+            AddTextLabel(Plugin.MOD_NAME, bigText: true);
             DrawTextLabels(ref Tabs[tabIndex]);
 
             AddNewLine(0.5f);
-            AddTextLabel("Version " + SlugcatStatsConfig.VERSION, FLabelAlignment.Left);
+            AddTextLabel("Version " + Plugin.VERSION, FLabelAlignment.Left);
             AddTextLabel("by " + AUTHORS_NAME, FLabelAlignment.Right);
             DrawTextLabels(ref Tabs[tabIndex]);
 
             AddNewLine();
             AddBox();
         }
-        private void AddDraggerFloat(Configurable<float> configurable, string text)
+
+        private void InitializeMarginAndPos()
         {
-            draggerFloatConfigurables.Add(configurable);
-            draggerFloatTextLabels.Add(new OpLabel(new Vector2(), new Vector2(), text, FLabelAlignment.Left));
+            marginX = new Vector2(50f, 550f);
+            pos = new Vector2(50f, 600f);
         }
 
-        private void AddDraggerInt(Configurable<int> configurable, string text)
+        private void AddNewLine(float spacingModifier = 1f)
+        {
+            pos.x = marginX.x; // left margin
+            pos.y -= spacingModifier * spacing;
+        }
+
+        private void AddFloatSlider(Configurable<float> configurable, string text, string sliderTextLeft = "", string sliderTextRight = "")
+        {
+            floatSliderConfigurables.Add(configurable);
+            floatSliderMainTextLabels.Add(text);
+            floatSliderTextLabelsLeft.Add(new OpLabel(new Vector2(), new Vector2(), sliderTextLeft, alignment: FLabelAlignment.Right)); // set pos and size when drawing
+            floatSliderTextLabelsRight.Add(new OpLabel(new Vector2(), new Vector2(), sliderTextRight, alignment: FLabelAlignment.Left));
+        }
+
+        private void AddDragger(Configurable<int> configurable, string text)
         {
             draggerIntConfigurables.Add(configurable);
             draggerIntTextLabels.Add(new OpLabel(new Vector2(), new Vector2(), text, FLabelAlignment.Left));
         }
 
-        private void DrawFloatDraggers(ref OpTab tab)
+        private void DrawFloatSliders(ref OpTab tab)
         {
-            if (draggerFloatConfigurables.Count != draggerFloatTextLabels.Count) return;
+            if (floatSliderConfigurables.Count != floatSliderMainTextLabels.Count) return;
+            if (floatSliderConfigurables.Count != floatSliderTextLabelsLeft.Count) return;
+            if (floatSliderConfigurables.Count != floatSliderTextLabelsRight.Count) return;
 
             float width = marginX.y - marginX.x;
-            float elementWidth = (width - (numberOfDraggers - 1) * 0.5f * spacing) / numberOfDraggers;
-            pos.y -= draggerSize;
-            float _posX = pos.x;
+            float sliderCenter = marginX.x + 0.5f * width;
+            float sliderLabelSizeX = 0.2f * width;
+            float sliderSizeX = width - 2f * sliderLabelSizeX - spacing;
 
-            for (int i = 0; i < draggerFloatConfigurables.Count; ++i)
+            for (int sliderIndex = 0; sliderIndex < floatSliderConfigurables.Count; ++sliderIndex)
             {
-                Configurable<float> configurable = draggerFloatConfigurables[i];
+                AddNewLine(2f);
 
-                OpDragger dragger = new(configurable, new Vector2(_posX, pos.y))
+                OpLabel opLabel = floatSliderTextLabelsLeft[sliderIndex];
+                opLabel.pos = new Vector2(marginX.x, pos.y + 5f);
+                opLabel.size = new Vector2(sliderLabelSizeX, fontHeight);
+                tab.AddItems(opLabel);
+
+                Configurable<float> configurable = floatSliderConfigurables[sliderIndex];
+                OpFloatSlider slider = new(configurable, new Vector2(sliderCenter - 0.5f * sliderSizeX, pos.y), (int)sliderSizeX)
                 {
+                    size = new Vector2(sliderSizeX, fontHeight),
                     description = configurable.info?.description ?? ""
                 };
-                tab.AddItems(dragger);
-                _posX += DraggerWithSpacing;
+                tab.AddItems(slider);
 
-                OpLabel draggerLabel = draggerFloatTextLabels[i];
-                draggerLabel.pos = new Vector2(_posX, pos.y + 2f);
-                draggerLabel.size = new Vector2(elementWidth - DraggerWithSpacing, fontHeight);
-                tab.AddItems(draggerLabel);
+                opLabel = floatSliderTextLabelsRight[sliderIndex];
+                opLabel.pos = new Vector2(sliderCenter + 0.5f * sliderSizeX + 0.5f * spacing, pos.y + 5f);
+                opLabel.size = new Vector2(sliderLabelSizeX, fontHeight);
+                tab.AddItems(opLabel);
 
-                if (i < draggerFloatConfigurables.Count - 1)
+                AddTextLabel(floatSliderMainTextLabels[sliderIndex]);
+                DrawTextLabels(ref tab);
+
+                if (sliderIndex < floatSliderConfigurables.Count - 1)
                 {
-                    if ((i + 1) % numberOfDraggers == 0)
-                    {
-                        AddNewLine();
-                        pos.y -= draggerSize;
-                        _posX = pos.x;
-                    }
-                    else
-                    {
-                        _posX += elementWidth - DraggerWithSpacing + 0.5f * spacing;
-                    }
+                    AddNewLine();
                 }
             }
 
-            draggerFloatConfigurables.Clear();
-            draggerFloatTextLabels.Clear();
+            floatSliderConfigurables.Clear();
+            floatSliderMainTextLabels.Clear();
+            floatSliderTextLabelsLeft.Clear();
+            floatSliderTextLabelsRight.Clear();
         }
 
-        private void DrawIntDraggers(ref OpTab tab)
+        private void DrawDraggers(ref OpTab tab)
         {
             if (draggerIntConfigurables.Count != draggerIntTextLabels.Count) return;
 
@@ -205,18 +398,6 @@ namespace SlugcatStatsConfig
 
             draggerIntConfigurables.Clear();
             draggerIntTextLabels.Clear();
-        }
-
-        private void InitializeMarginAndPos()
-        {
-            marginX = new Vector2(50f, 550f);
-            pos = new Vector2(50f, 600f);
-        }
-
-        private void AddNewLine(float spacingModifier = 1f)
-        {
-            pos.x = marginX.x; // left margin
-            pos.y -= spacingModifier * spacing;
         }
 
         private void AddBox()
