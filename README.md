@@ -1,4 +1,4 @@
-## Provides a simple Remix config for overriding most things located under the SlugcatStats class (runspeed, lungsfac, bodyweight etc.)
+# Provides a simple Remix config for overriding most things located under the SlugcatStats class (runspeed, lungsfac, bodyweight etc.)
 
 ## Manual Installation
 1. Download the latest ZIP archive from releases
