@@ -49,7 +49,7 @@ namespace SlugcatStatsConfig
         public static Configurable<float> lungsFac = instance.config.Bind("lungsFac", -0.1f, new ConfigurableInfo(
             "Determines lung capacity. LOWER values mean slugcat can hold their breath for longer." +
             "\nSurvivor = 1.0, Rivulet = 0.15, Monk = 1.2",
-            new ConfigAcceptableRange<float>(-0.1f, 2.0f), "", "Lungs Factor"));
+            new ConfigAcceptableRange<float>(-0.1f, 5.0f), "", "Lungs Factor"));
 
         public static Configurable<float> generalVisibilityBonus = instance.config.Bind("generalVisibilityBonus", -1.1f, new ConfigurableInfo(
             "A bonus on how easily slugcat is spotted by other creatures (minimum reverts to default). Lower is less visible." +
@@ -76,22 +76,22 @@ namespace SlugcatStatsConfig
         public static Configurable<float> poleClimbSpeedFac = instance.config.Bind("poleClimbSpeedFac", -0.1f, new ConfigurableInfo(
             "Determines how quickly slugcat can climb poles." +
             "\nSurvivor = 1.0, Rivulet = 1.8",
-            new ConfigAcceptableRange<float>(-0.1f, 5.0f), "", "Pole Climb Speed Factor"));
+            new ConfigAcceptableRange<float>(-0.1f, 10.0f), "", "Pole Climb Speed Factor"));
 
         public static Configurable<float> corridorClimbSpeedFac = instance.config.Bind("corridorClimbSpeedFac", -0.1f, new ConfigurableInfo(
             "Determines how quickly slugcat can climb through corridors." +
             "\nSurvivor = 1.0, Rivulet = 1.6",
-            new ConfigAcceptableRange<float>(-0.1f, 5.0f), "", "Corridor Climb Speed Factor"));
+            new ConfigAcceptableRange<float>(-0.1f, 10.0f), "", "Corridor Climb Speed Factor"));
 
         public static Configurable<float> runspeedFac = instance.config.Bind("runspeedFac", -0.1f, new ConfigurableInfo(
             "Determines how fast slugcat can run." +
             "\nSurvivor = 1.0, Rivulet = 1.75",
-            new ConfigAcceptableRange<float>(-0.1f, 5.0f), "", "Run Speed Factor"));
+            new ConfigAcceptableRange<float>(-0.1f, 10.0f), "", "Run Speed Factor"));
 
         public static Configurable<float> bodyWeightFac = instance.config.Bind("bodyWeightFac", -0.1f, new ConfigurableInfo(
             "Determines slugcat's weight." +
             "\nSurvivor = 1.0, Spearmaster = 0.85, Gourmand = 1.35",
-            new ConfigAcceptableRange<float>(-0.1f, 5.0f), "", "Body Weight Factor"));
+            new ConfigAcceptableRange<float>(-0.1f, 10.0f), "", "Body Weight Factor"));
 
 
         #endregion
@@ -106,22 +106,22 @@ namespace SlugcatStatsConfig
         public static Configurable<float> poleClimbSpeedFacStarving = instance.config.Bind("poleClimbSpeedFacStarving", -0.1f, new ConfigurableInfo(
             "Determines how quickly slugcat can climb poles." +
             "\nSurvivor = 0.8, Rivulet = 1.1",
-            new ConfigAcceptableRange<float>(-0.1f, 5.0f), "", "Starving Pole Climb Speed Factor"));
+            new ConfigAcceptableRange<float>(-0.1f, 10.0f), "", "Starving Pole Climb Speed Factor"));
 
         public static Configurable<float> corridorClimbSpeedFacStarving = instance.config.Bind("corridorClimbSpeedFacStarving", -0.1f, new ConfigurableInfo(
             "Determines how quickly slugcat can climb through corridors." +
             "\nSurvivor = 0.86, Rivulet = 1.2",
-            new ConfigAcceptableRange<float>(-0.1f, 5.0f), "", "Starving Corridor Climb Speed Factor"));
+            new ConfigAcceptableRange<float>(-0.1f, 10.0f), "", "Starving Corridor Climb Speed Factor"));
 
         public static Configurable<float> runspeedFacStarving = instance.config.Bind("runspeedFacStarving", -0.1f, new ConfigurableInfo(
             "Determines how fast slugcat can run." +
             "\nSurvivor = 0.875, Rivulet = 1.27",
-            new ConfigAcceptableRange<float>(-0.1f, 5.0f), "", "Starving Run Speed Factor"));
+            new ConfigAcceptableRange<float>(-0.1f, 10.0f), "", "Starving Run Speed Factor"));
 
         public static Configurable<float> bodyWeightFacStarving = instance.config.Bind("bodyWeightFacStarving", -0.1f, new ConfigurableInfo(
             "Determines slugcat's weight." +
             "\nSurvivor = 0.9, Gourmand = 1.15",
-            new ConfigAcceptableRange<float>(-0.1f, 5.0f), "", "Starving Body Weight Factor"));
+            new ConfigAcceptableRange<float>(-0.1f, 10.0f), "", "Starving Body Weight Factor"));
 
         #endregion
 
@@ -218,7 +218,7 @@ namespace SlugcatStatsConfig
             AddFloatSlider(extraJumpBoost, (string)extraJumpBoost.info.Tags[0]);
             DrawFloatSliders(ref Tabs[tabIndex]);
 
-            AddNewLine(14);
+            AddNewLine(16);
             DrawBox(ref Tabs[tabIndex]);
 
             AddTab(ref tabIndex, "Normal");
