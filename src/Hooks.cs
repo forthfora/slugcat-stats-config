@@ -113,6 +113,25 @@ namespace SlugcatStatsConfig
         {
             IntVector2 food = orig(slugcat);
 
+            if (slugcat == MoreSlugcats.MoreSlugcatsEnums.SlugcatStatsName.Slugpup)
+            {
+                if (Options.slugpupHibernationFood.Value > 0)
+                {
+                    food.y = Options.slugpupHibernationFood.Value;
+                }
+
+                int slugpupExtraFood = food.x - food.y;
+
+                if (Options.slugpupExtraFood.Value >= 0)
+                {
+                    slugpupExtraFood = Options.slugpupExtraFood.Value;
+                }
+
+                food.x = food.y + slugpupExtraFood;
+
+                return food;
+            }
+
             if (Options.hibernationFood.Value > 0)
             {
                 food.y = Options.hibernationFood.Value;

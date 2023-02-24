@@ -9,35 +9,35 @@
 
   <ItemGroup>
     <Reference Include="Assembly-CSharp">
-      <HintPath>..\..\Backups\Rain World\Rain World References\BepInEx\utils\PUBLIC-Assembly-CSharp.dll</HintPath>
+      <HintPath>..\..\..\Backups\Rain World\Rain World References\BepInEx\utils\PUBLIC-Assembly-CSharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="BepInEx">
-      <HintPath>..\..\Backups\Rain World\Rain World References\BepInEx\core\BepInEx.dll</HintPath>
+      <HintPath>..\..\..\Backups\Rain World\Rain World References\BepInEx\core\BepInEx.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="HOOKS-Assembly-CSharp">
-      <HintPath>..\..\Backups\Rain World\Rain World References\BepInEx\plugins\HOOKS-Assembly-CSharp.dll</HintPath>
+      <HintPath>..\..\..\Backups\Rain World\Rain World References\BepInEx\plugins\HOOKS-Assembly-CSharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Mono.Cecil">
-      <HintPath>..\..\Backups\Rain World\Rain World References\RainWorld_Data\Managed\Mono.Cecil.dll</HintPath>
+      <HintPath>..\..\..\Backups\Rain World\Rain World References\RainWorld_Data\Managed\Mono.Cecil.dll</HintPath>
     </Reference>
     <Reference Include="MonoMod">
-      <HintPath>..\..\Backups\Rain World\Rain World References\BepInEx\core\MonoMod.dll</HintPath>
+      <HintPath>..\..\..\Backups\Rain World\Rain World References\BepInEx\core\MonoMod.dll</HintPath>
     </Reference>
     <Reference Include="MonoMod.RuntimeDetour">
-      <HintPath>..\..\Backups\Rain World\Rain World References\RainWorld_Data\Managed\MonoMod.RuntimeDetour.dll</HintPath>
+      <HintPath>..\..\..\Backups\Rain World\Rain World References\RainWorld_Data\Managed\MonoMod.RuntimeDetour.dll</HintPath>
     </Reference>
     <Reference Include="MonoMod.Utils">
-      <HintPath>..\..\Backups\Rain World\Rain World References\RainWorld_Data\Managed\MonoMod.Utils.dll</HintPath>
+      <HintPath>..\..\..\Backups\Rain World\Rain World References\RainWorld_Data\Managed\MonoMod.Utils.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine">
-      <HintPath>..\..\Backups\Rain World\Rain World References\RainWorld_Data\Managed\UnityEngine.dll</HintPath>
+      <HintPath>..\..\..\Backups\Rain World\Rain World References\RainWorld_Data\Managed\UnityEngine.dll</HintPath>
       <Private>False</Private>
     </Reference>
 	<Reference Include="UnityEngine.CoreModule">
-		<HintPath>..\..\Backups\Rain World\Rain World References\RainWorld_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
+		<HintPath>..\..\..\Backups\Rain World\Rain World References\RainWorld_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
 		<Private>False</Private>
 	</Reference>
   </ItemGroup>

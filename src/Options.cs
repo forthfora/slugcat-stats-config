@@ -46,6 +46,17 @@ namespace SlugcatStatsConfig
             "Number of food pips that can be stored as extra.",
             new ConfigAcceptableRange<int>(-1, int.MaxValue / 2), "", "Extra Food"));
 
+
+        public static Configurable<int> slugpupHibernationFood = instance.config.Bind("slugpupHibernationFood", -1, new ConfigurableInfo(
+            "Number of food pips necessary for each slugpup to hibernate.",
+            new ConfigAcceptableRange<int>(-1, int.MaxValue / 2), "", "Slugpup Hibernation Food"));
+
+        public static Configurable<int> slugpupExtraFood = instance.config.Bind("slugpupExtraFood", -1, new ConfigurableInfo(
+            "Number of food pips that each slugpup can store as extra.",
+            new ConfigAcceptableRange<int>(-1, int.MaxValue / 2), "", "Slugpup Extra Food"));
+
+
+
         public static Configurable<float> lungsFac = instance.config.Bind("lungsFac", -0.1f, new ConfigurableInfo(
             "Determines lung capacity. LOWER values mean slugcat can hold their breath for longer." +
             "\nSurvivor = 1.0, Rivulet = 0.15, Monk = 1.2",
@@ -134,7 +145,6 @@ namespace SlugcatStatsConfig
             "\nBase Jump: Survivor = 8.0, Rivulet = 14.0",
             new ConfigAcceptableRange<float>(-10.1f, 10.0f), "", "Extra Jump Boost"));
 
-
         #region Parameters
         private readonly float spacing = 20f;
         private readonly float fontHeight = 20f;
@@ -187,7 +197,8 @@ namespace SlugcatStatsConfig
             Tabs = new OpTab[NUMBER_OF_TABS];
             int tabIndex = -1;
 
-            // Miscellaneous stats that are unaffected by starving
+
+
             AddTab(ref tabIndex, "General");
 
             AddDragger(hibernationFood, (string)hibernationFood.info.Tags[0]);
@@ -210,7 +221,13 @@ namespace SlugcatStatsConfig
             AddNewLine(0);
             DrawBox(ref Tabs[tabIndex]);
 
+
+
             AddTab(ref tabIndex, "Extras");
+
+            AddDragger(slugpupHibernationFood, (string)slugpupHibernationFood.info.Tags[0]);
+            AddDragger(slugpupExtraFood, (string)slugpupExtraFood.info.Tags[0]);
+            DrawDraggers(ref Tabs[tabIndex]);
 
             AddCheckBox(forceGlow, (string)forceGlow.info.Tags[0]);
             DrawCheckBoxes(ref Tabs[tabIndex]);
@@ -218,8 +235,10 @@ namespace SlugcatStatsConfig
             AddFloatSlider(extraJumpBoost, (string)extraJumpBoost.info.Tags[0]);
             DrawFloatSliders(ref Tabs[tabIndex]);
 
-            AddNewLine(16);
+            AddNewLine(13);
             DrawBox(ref Tabs[tabIndex]);
+
+
 
             AddTab(ref tabIndex, "Normal");
 
@@ -232,9 +251,10 @@ namespace SlugcatStatsConfig
             AddFloatSlider(corridorClimbSpeedFac, (string)corridorClimbSpeedFac.info.Tags[0]);
             DrawFloatSliders(ref Tabs[tabIndex]);
 
-
             AddNewLine(4);
             DrawBox(ref Tabs[tabIndex]);
+
+
 
             AddTab(ref tabIndex, "Starving");
 
@@ -249,6 +269,7 @@ namespace SlugcatStatsConfig
 
             AddNewLine(4);
             DrawBox(ref Tabs[tabIndex]);
+
 
 
             AddTab(ref tabIndex, "Spear Spawns");
