@@ -4,6 +4,6 @@
 
 [b]Unfortunately, certain stats, such as roll speed and slide distance, are hardcoded in the player script - these are beyond the scope of this mod.[/b]
 
-[b][u]Does not seem to affect SlugBase characters for the most part. Sorry.[/u][b]
+[b][u]Does not seem to affect SlugBase characters for the most part.[/u][b]
 
 [u][b]Source: https://github.com/forthbridge/slugcat-stats-config[/b][/u]

@@ -136,6 +136,7 @@ namespace SlugcatStatsConfig
 
         #endregion
 
+        #region Extras
         public static Configurable<bool> forceGlow = instance.config.Bind("forceGlow", false, new ConfigurableInfo(
             "Whether all slugcats will be forced to have the neuron glow effect. Not persistent.",
             null, "", "Force Glow?"));
@@ -144,6 +145,21 @@ namespace SlugcatStatsConfig
             "Determines extra jump power. Will only be added/subtracted ontop of the normal jump's power." +
             "\nBase Jump: Survivor = 8.0, Rivulet = 14.0",
             new ConfigAcceptableRange<float>(-10.1f, 10.0f), "", "Extra Jump Boost"));
+
+        public static Configurable<int> needleExtractSpeedFirst = instance.config.Bind("needleExtractSpeedFirst", 100, new ConfigurableInfo(
+            "How long Spearmaster takes to extract spears relative to normal. Applies to the first 10% of extraction.",
+            new ConfigAcceptableRange<int>(1, 1000), "", "Needle Extract Speed Multiplier" +
+            "\n(First 10%)"));
+
+        public static Configurable<int> needleExtractSpeedLast = instance.config.Bind("needleExtractSpeedLast", 100, new ConfigurableInfo(
+            "How long Spearmaster takes to extract spears relative to normal. Applies to the remaining 90% of extraction.",
+            new ConfigAcceptableRange<int>(1, 1000), "", "Needle Extract Speed Multiplier" +
+            "\n(Last 90%)"));
+
+        public static Configurable<bool> instantNeedles = instance.config.Bind("instantNeedles", false, new ConfigurableInfo(
+            "Overrides the other speed configs and makes needle extraction instantaneous.",
+            null, "", "Instant Needles?"));
+        #endregion
 
         #region Parameters
         private readonly float spacing = 20f;
@@ -230,12 +246,18 @@ namespace SlugcatStatsConfig
             DrawDraggers(ref Tabs[tabIndex]);
 
             AddCheckBox(forceGlow, (string)forceGlow.info.Tags[0]);
+            AddCheckBox(instantNeedles, (string)instantNeedles.info.Tags[0]);
             DrawCheckBoxes(ref Tabs[tabIndex]);
 
             AddFloatSlider(extraJumpBoost, (string)extraJumpBoost.info.Tags[0]);
             DrawFloatSliders(ref Tabs[tabIndex]);
 
-            AddNewLine(13);
+            AddSlider(needleExtractSpeedFirst, (string)needleExtractSpeedFirst.info.Tags[0], "1%", "1000%");
+            AddSlider(needleExtractSpeedLast, (string)needleExtractSpeedLast.info.Tags[0], "1%", "1000%");
+            DrawSliders(ref Tabs[tabIndex]);
+
+
+            AddNewLine(6);
             DrawBox(ref Tabs[tabIndex]);
 
 

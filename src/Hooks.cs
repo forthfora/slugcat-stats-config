@@ -26,18 +26,12 @@ namespace SlugcatStatsConfig
             On.Player.Update += Player_Update;
         }
 
+        #region Basic Stats
         private static void Player_Update(On.Player.orig_Update orig, Player self, bool eu)
         {
             orig(self, eu);
 
             if (Options.forceGlow.Value) self.glowing = true;
-        }
-
-        private static void Player_Jump(On.Player.orig_Jump orig, Player self)
-        {
-            orig(self);
-
-            if (Options.extraJumpBoost.Value > -10.1f) self.jumpBoost += Options.extraJumpBoost.Value;
         }
 
         private static float SlugcatStats_SpearSpawnExplosiveRandomChance(On.SlugcatStats.orig_SpearSpawnExplosiveRandomChance orig, SlugcatStats.Name index)
@@ -148,6 +142,7 @@ namespace SlugcatStatsConfig
 
             return food;
         }
+        #endregion
 
         private static bool isInit = false;
 
@@ -159,6 +154,52 @@ namespace SlugcatStatsConfig
             isInit = true;
 
             MachineConnector.SetRegisteredOI(Plugin.MOD_ID, Options.instance);
+
+            try
+            {
+                IL.Player.GrabUpdate += Player_GrabUpdate;
+            }
+            catch (Exception e)
+            {
+                Plugin.Logger.LogWarning(e);
+            }
+        }
+
+        private static void Player_Jump(On.Player.orig_Jump orig, Player self)
+        {
+            orig(self);
+
+            if (Options.extraJumpBoost.Value > -10.1f) self.jumpBoost += Options.extraJumpBoost.Value;
+        }
+
+        private static void Player_GrabUpdate(ILContext il)
+        {
+            ILCursor c = new ILCursor(il);
+
+            // First 10% Extraction Speed
+            c.GotoNext(MoveType.After,
+                x => x.MatchLdloc(16),
+                x => x.MatchLdloc(16),
+                x => x.MatchLdfld<PlayerGraphics.TailSpeckles>("spearProg"),
+                x => x.MatchLdcR4(0.11f));
+
+            c.Remove();
+
+            c.Emit(OpCodes.Ldarg_0);
+            c.EmitDelegate<Func<Player, float>>((player) => Options.instantNeedles.Value ? 1.0f : (Options.needleExtractSpeedFirst.Value / 100.0f) * 0.1f);
+
+
+            // Rest of Extraction Speed
+            c.GotoNext(MoveType.After,
+                x => x.MatchLdloc(16),
+                x => x.MatchLdloc(16),
+                x => x.MatchLdfld<PlayerGraphics.TailSpeckles>("spearProg"),
+                x => x.MatchLdcR4(1));
+
+            c.Remove();
+
+            c.Emit(OpCodes.Ldarg_0);
+            c.EmitDelegate<Func<Player, float>>((player) => Options.instantNeedles.Value ? 1.0f : (Options.needleExtractSpeedLast.Value / 100.0f) * 0.05f);
         }
     }
 }
