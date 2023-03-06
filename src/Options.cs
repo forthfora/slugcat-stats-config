@@ -39,20 +39,24 @@ namespace SlugcatStatsConfig
 
 
         public static Configurable<int> hibernationFood = instance.config.Bind("hibernationFood", -1, new ConfigurableInfo(
-            "Number of food pips necessary to hibernate.",
+            "Number of food pips necessary to hibernate." +
+            "\nHold and drag up or down to change.",
             new ConfigAcceptableRange<int>(-1, int.MaxValue / 2), "", "Hibernation Food"));
 
         public static Configurable<int> extraFood = instance.config.Bind("extraFood", -1, new ConfigurableInfo(
-            "Number of food pips that can be stored as extra.",
+            "Number of food pips that can be stored as extra." +
+            "\nHold and drag up or down to change.",
             new ConfigAcceptableRange<int>(-1, int.MaxValue / 2), "", "Extra Food"));
 
 
         public static Configurable<int> slugpupHibernationFood = instance.config.Bind("slugpupHibernationFood", -1, new ConfigurableInfo(
-            "Number of food pips necessary for each slugpup to hibernate.",
+            "Number of food pips necessary for each slugpup to hibernate." +
+            "\nHold and drag up or down to change.",
             new ConfigAcceptableRange<int>(-1, int.MaxValue / 2), "", "Slugpup Hibernation Food"));
 
         public static Configurable<int> slugpupExtraFood = instance.config.Bind("slugpupExtraFood", -1, new ConfigurableInfo(
-            "Number of food pips that each slugpup can store as extra.",
+            "Number of food pips that each slugpup can store as extra." +
+            "\nHold and drag up or down to change.",
             new ConfigAcceptableRange<int>(-1, int.MaxValue / 2), "", "Slugpup Extra Food"));
 
 
@@ -111,7 +115,7 @@ namespace SlugcatStatsConfig
 
         public static Configurable<int> throwingSkillStarving = instance.config.Bind("throwingSkillStarving", -1, new ConfigurableInfo(
             "Determines throwing velocity, spear damage, throw delay, etc. Higher values are better" +
-            "\nDefault = 0, Gourmand = 2",
+            "\nHold and drag up or down to change. Default = 0, Gourmand = 2",
             new ConfigAcceptableRange<int>(-1, 2), "", "Starving Throwing Skill"));
 
         public static Configurable<float> poleClimbSpeedFacStarving = instance.config.Bind("poleClimbSpeedFacStarving", -0.1f, new ConfigurableInfo(
