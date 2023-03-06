@@ -85,7 +85,7 @@ namespace SlugcatStatsConfig
 
         public static Configurable<int> throwingSkill = instance.config.Bind("throwingSkill", -1, new ConfigurableInfo(
             "Determines throwing velocity, spear damage, throw delay, etc. Higher values are better" +
-            "\nMonk = 0, Survivor = 1, Hunter = 2",
+            "\nHold and drag up or down to change. Monk = 0, Survivor = 1, Hunter = 2",
             new ConfigAcceptableRange<int>(-1, 2), "", "Throwing Skill"));
 
         public static Configurable<float> poleClimbSpeedFac = instance.config.Bind("poleClimbSpeedFac", -0.1f, new ConfigurableInfo(
