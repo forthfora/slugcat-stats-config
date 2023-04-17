@@ -141,6 +141,7 @@ namespace SlugcatStatsConfig
         #endregion
 
         #region Extras
+
         public static Configurable<bool> forceGlow = instance.config.Bind("forceGlow", false, new ConfigurableInfo(
             "Whether all slugcats will be forced to have the neuron glow effect. Not persistent.",
             null, "", "Force Glow?"));
@@ -163,9 +164,19 @@ namespace SlugcatStatsConfig
         public static Configurable<bool> instantNeedles = instance.config.Bind("instantNeedles", false, new ConfigurableInfo(
             "Overrides the other speed configs and makes needle extraction instantaneous.",
             null, "", "Instant Needles?"));
+
+
+
+        public static Configurable<float> pyroDeathThreshold = instance.config.Bind("pyroDeathThreshold", -0.1f, new ConfigurableInfo(
+            "Determines the percentage of air in lungs that Artificer will die at or below, default 65%." +
+            "\nA value of 0.0 will grant Artificer normal lung capacity.",
+            new ConfigAcceptableRange<float>(-0.1f, 1.0f), "", "Pyro Death Threshold"));
+
         #endregion
 
+
         #region Parameters
+
         private readonly float spacing = 20f;
         private readonly float fontHeight = 20f;
 
@@ -177,9 +188,8 @@ namespace SlugcatStatsConfig
         private readonly int numberOfDraggers = 2;
         private readonly float draggerSize = 60.0f;
 
-        #endregion
 
-        #region Variables
+
         private Vector2 marginX = new();
         private Vector2 pos = new();
 
@@ -207,7 +217,9 @@ namespace SlugcatStatsConfig
         private readonly List<OpLabel> sliderTextLabelsRight = new();
 
         private readonly List<OpLabel> textLabels = new();
+
         #endregion
+
 
         private const int NUMBER_OF_TABS = 5;
 
@@ -254,6 +266,7 @@ namespace SlugcatStatsConfig
             DrawCheckBoxes(ref Tabs[tabIndex]);
 
             AddFloatSlider(extraJumpBoost, (string)extraJumpBoost.info.Tags[0]);
+            AddFloatSlider(pyroDeathThreshold, (string)pyroDeathThreshold.info.Tags[0]);
             DrawFloatSliders(ref Tabs[tabIndex]);
 
             AddSlider(needleExtractSpeedFirst, (string)needleExtractSpeedFirst.info.Tags[0], "1%", "1000%");
@@ -261,7 +274,7 @@ namespace SlugcatStatsConfig
             DrawSliders(ref Tabs[tabIndex]);
 
 
-            AddNewLine(6);
+            AddNewLine(2);
             DrawBox(ref Tabs[tabIndex]);
 
 
@@ -309,7 +322,10 @@ namespace SlugcatStatsConfig
             DrawBox(ref Tabs[tabIndex]);
         }
 
+
+
         #region UI Elements
+
         private void AddTab(ref int tabIndex, string tabName)
         {
             tabIndex++;
@@ -376,7 +392,7 @@ namespace SlugcatStatsConfig
                 tab.AddItems(opLabel);
 
                 Configurable<float> configurable = floatSliderConfigurables[sliderIndex];
-                OpFloatSlider slider = new(configurable, new Vector2(sliderCenter - 0.5f * sliderSizeX, pos.y), (int)sliderSizeX)
+                OpFloatSlider slider = new(configurable, new Vector2(sliderCenter - 0.5f * sliderSizeX, pos.y), (int)sliderSizeX, 1)
                 {
                     size = new Vector2(sliderSizeX, fontHeight),
                     description = configurable.info?.description ?? ""
@@ -515,56 +531,6 @@ namespace SlugcatStatsConfig
             checkBoxesTextLabels.Clear();
         }
 
-        private void AddComboBox(Configurable<string> configurable, List<ListItem> list, string text, bool allowEmpty = false)
-        {
-            OpLabel opLabel = new(new Vector2(), new Vector2(0.0f, fontHeight), text, FLabelAlignment.Center, false);
-            comboBoxesTextLabels.Add(opLabel);
-            comboBoxConfigurables.Add(configurable);
-            comboBoxLists.Add(list);
-            comboBoxAllowEmpty.Add(allowEmpty);
-        }
-
-        private void DrawComboBoxes(ref OpTab tab)
-        {
-            if (comboBoxConfigurables.Count != comboBoxesTextLabels.Count) return;
-            if (comboBoxConfigurables.Count != comboBoxLists.Count) return;
-            if (comboBoxConfigurables.Count != comboBoxAllowEmpty.Count) return;
-
-            float offsetX = (marginX.y - marginX.x) * 0.1f;
-            float width = (marginX.y - marginX.x) * 0.4f;
-
-            for (int comboBoxIndex = 0; comboBoxIndex < comboBoxConfigurables.Count; ++comboBoxIndex)
-            {
-                AddNewLine(1.25f);
-                pos.x += offsetX;
-
-                OpLabel opLabel = comboBoxesTextLabels[comboBoxIndex];
-                opLabel.pos = pos;
-                opLabel.size += new Vector2(width, 2f); // size.y is already set
-                pos.x += width;
-
-                Configurable<string> configurable = comboBoxConfigurables[comboBoxIndex];
-                OpComboBox comboBox = new(configurable, pos, width, comboBoxLists[comboBoxIndex])
-                {
-                    allowEmpty = comboBoxAllowEmpty[comboBoxIndex],
-                    description = configurable.info?.description ?? ""
-                };
-                tab.AddItems(opLabel, comboBox);
-
-                // don't add a new line on the last element
-                if (comboBoxIndex < comboBoxConfigurables.Count - 1)
-                {
-                    AddNewLine();
-                    pos.x = marginX.x;
-                }
-            }
-
-            comboBoxesTextLabels.Clear();
-            comboBoxConfigurables.Clear();
-            comboBoxLists.Clear();
-            comboBoxAllowEmpty.Clear();
-        }
-
         private void AddSlider(Configurable<int> configurable, string text, string sliderTextLeft = "", string sliderTextRight = "")
         {
             sliderConfigurables.Add(configurable);
@@ -655,6 +621,7 @@ namespace SlugcatStatsConfig
             pos.x = marginX.x;
             textLabels.Clear();
         }
+
         #endregion
     }
 }

@@ -24,50 +24,33 @@ namespace SlugcatStatsConfig
 
             On.Player.Jump += Player_Jump;
             On.Player.Update += Player_Update;
+            On.Player.PyroDeathThreshold += Player_PyroDeathThreshold;
         }
 
-        #region Basic Stats
-        private static void Player_Update(On.Player.orig_Update orig, Player self, bool eu)
+        private static bool isInit = false;
+
+        private static void RainWorld_OnModsInit(On.RainWorld.orig_OnModsInit orig, RainWorld self)
         {
-            orig(self, eu);
+            try
+            {
+                if (isInit) return;
+                isInit = true;
 
-            if (Options.forceGlow.Value) self.glowing = true;
+                MachineConnector.SetRegisteredOI(Plugin.MOD_ID, Options.instance);
+
+                IL.Player.GrabUpdate += Player_GrabUpdate;
+            }
+            catch (Exception e)
+            {
+                Plugin.Logger.LogWarning(e);
+            }
+            finally
+            {
+                orig(self);
+            }
         }
 
-        private static float SlugcatStats_SpearSpawnExplosiveRandomChance(On.SlugcatStats.orig_SpearSpawnExplosiveRandomChance orig, SlugcatStats.Name index)
-        {
-            if (Options.explosiveSpearSpawnChance.Value >= 0.0f) return Options.explosiveSpearSpawnChance.Value;
 
-            return orig(index);
-        }
-
-        private static float SlugcatStats_SpearSpawnElectricRandomChance(On.SlugcatStats.orig_SpearSpawnElectricRandomChance orig, SlugcatStats.Name index)
-        {
-            if (Options.electricSpearSpawnChance.Value >= 0.0f) return Options.electricSpearSpawnChance.Value;
-
-            return orig(index);
-        }
-
-        private static float SlugcatStats_SpearSpawnModifier(On.SlugcatStats.orig_SpearSpawnModifier orig, SlugcatStats.Name index, float originalSpearChance)
-        {
-            if (Options.spearSpawnChanceModifier.Value >= 0.0f) return Mathf.Pow(originalSpearChance, Options.spearSpawnChanceModifier.Value);
-
-            return orig(index, originalSpearChance);
-        }
-
-        private static bool SlugcatStats_AutoGrabBatflys(On.SlugcatStats.orig_AutoGrabBatflys orig, SlugcatStats.Name slugcatNum)
-        {
-            if (Options.autoGrabBatflies.Value) return true;
-
-            return orig(slugcatNum);
-        }
-
-        private static bool SlugcatStats_SlugcatCanMaul(On.SlugcatStats.orig_SlugcatCanMaul orig, SlugcatStats.Name slugcatNum)
-        {
-            if (Options.canMaul.Value) return true;
-
-            return orig(slugcatNum);
-        }
 
         private static void SlugcatStats_ctor(On.SlugcatStats.orig_ctor orig, SlugcatStats self, SlugcatStats.Name slugcat, bool malnourished)
         {
@@ -142,29 +125,56 @@ namespace SlugcatStatsConfig
 
             return food;
         }
-        #endregion
 
-        private static bool isInit = false;
 
-        private static void RainWorld_OnModsInit(On.RainWorld.orig_OnModsInit orig, RainWorld self)
+
+        private static float SlugcatStats_SpearSpawnExplosiveRandomChance(On.SlugcatStats.orig_SpearSpawnExplosiveRandomChance orig, SlugcatStats.Name index)
         {
-            orig(self);
+            if (Options.explosiveSpearSpawnChance.Value >= 0.0f) return Options.explosiveSpearSpawnChance.Value;
 
-            if (isInit) return;
-            isInit = true;
-
-            MachineConnector.SetRegisteredOI(Plugin.MOD_ID, Options.instance);
-
-            try
-            {
-                IL.Player.GrabUpdate += Player_GrabUpdate;
-            }
-            catch (Exception e)
-            {
-                Plugin.Logger.LogWarning(e);
-            }
+            return orig(index);
         }
 
+        private static float SlugcatStats_SpearSpawnElectricRandomChance(On.SlugcatStats.orig_SpearSpawnElectricRandomChance orig, SlugcatStats.Name index)
+        {
+            if (Options.electricSpearSpawnChance.Value >= 0.0f) return Options.electricSpearSpawnChance.Value;
+
+            return orig(index);
+        }
+
+        private static float SlugcatStats_SpearSpawnModifier(On.SlugcatStats.orig_SpearSpawnModifier orig, SlugcatStats.Name index, float originalSpearChance)
+        {
+            if (Options.spearSpawnChanceModifier.Value >= 0.0f) return Mathf.Pow(originalSpearChance, Options.spearSpawnChanceModifier.Value);
+
+            return orig(index, originalSpearChance);
+        }
+
+        private static bool SlugcatStats_AutoGrabBatflys(On.SlugcatStats.orig_AutoGrabBatflys orig, SlugcatStats.Name slugcatNum)
+        {
+            if (Options.autoGrabBatflies.Value) return true;
+
+            return orig(slugcatNum);
+        }
+
+        private static bool SlugcatStats_SlugcatCanMaul(On.SlugcatStats.orig_SlugcatCanMaul orig, SlugcatStats.Name slugcatNum)
+        {
+            if (Options.canMaul.Value) return true;
+
+            return orig(slugcatNum);
+        }
+
+
+
+        // Glow
+        private static void Player_Update(On.Player.orig_Update orig, Player self, bool eu)
+        {
+            orig(self, eu);
+
+            if (Options.forceGlow.Value) self.glowing = true;
+        }
+
+
+        // Jump Boost
         private static void Player_Jump(On.Player.orig_Jump orig, Player self)
         {
             orig(self);
@@ -172,6 +182,8 @@ namespace SlugcatStatsConfig
             if (Options.extraJumpBoost.Value > -10.1f) self.jumpBoost += Options.extraJumpBoost.Value;
         }
 
+
+        // Needle Extraction Speed
         private static void Player_GrabUpdate(ILContext il)
         {
             ILCursor c = new ILCursor(il);
@@ -200,6 +212,15 @@ namespace SlugcatStatsConfig
 
             c.Emit(OpCodes.Ldarg_0);
             c.EmitDelegate<Func<Player, float>>((player) => Options.instantNeedles.Value ? 1.0f : (Options.needleExtractSpeedLast.Value / 100.0f) * 0.05f);
+        }
+
+
+        // Artificer Drowning
+        private static float Player_PyroDeathThreshold(On.Player.orig_PyroDeathThreshold orig, RainWorldGame game)
+        {
+            if (Options.pyroDeathThreshold.Value < 0.0) return orig(game);
+
+            return Options.pyroDeathThreshold.Value;
         }
     }
 }

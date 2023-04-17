@@ -1,6 +1,5 @@
 ﻿using BepInEx;
 using BepInEx.Logging;
-using System;
 using System.Security.Permissions;
 using System.Security;
 
@@ -17,7 +16,7 @@ namespace SlugcatStatsConfig
     {
         public static new ManualLogSource Logger { get; private set; } = null!;
 
-        public const string VERSION = "1.0.3";
+        public const string VERSION = "1.0.4";
         public const string MOD_NAME = "Slugcat Stats Config";
         public const string MOD_ID = "slugcatstatsconfig";
         public const string AUTHOR = "forthbridge";
