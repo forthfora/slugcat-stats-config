@@ -1,0 +1,18 @@
+{
+  "Title": "Slugcat Stats Config",
+  "Description": "Provides a Remix config for overriding most of slugcat\u0027s basic stats!\u003CLINE\u003E\u003CLINE\u003EUnfortunately, certain stats, such as roll speed and slide distance, are hardcoded in the player script - these are beyond the scope of this mod.",
+  "ID": "slugcatstatsconfig",
+  "Version": "1.1.0",
+  "TargetGameVersion": "v1.9.06",
+  "Requirements": "",
+  "RequirementNames": "",
+  "Authors": "forthfora",
+  "Visibility": "Public",
+  "Tags": [
+    "Game Mechanics",
+    "Tools"
+  ],
+  "WorkshopID": 2938168725,
+  "UploadFilesOnly": true,
+  "UploadThumbnail": false
+}
