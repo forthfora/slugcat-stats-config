@@ -209,12 +209,25 @@ public static class Hooks
     {
         var c = new ILCursor(il);
 
+        // First Lerp
+        if (!c.TryGotoNext(MoveType.After,
+                x => x.MatchLdfld<PlayerGraphics.TailSpeckles>("spearProg"),
+                x => x.MatchLdcR4(0.0f),
+                x => x.MatchLdcR4(0.05f)))
+        {
+            throw new Exception("Goto Failed");
+        }
+
+        c.Emit(OpCodes.Pop);
+        c.EmitDelegate<Func<float>>(() => ModOptions.instantNeedles.Value ? 1.0f : (ModOptions.needleExtractSpeedLast.Value / 100.0f) * 0.05f);
+
         // First 10% Extraction Speed
         if (!c.TryGotoNext(MoveType.After,
                 x => x.MatchLdloc(16),
                 x => x.MatchLdloc(16),
                 x => x.MatchLdfld<PlayerGraphics.TailSpeckles>("spearProg"),
-                x => x.MatchLdcR4(0.11f)))
+                x => x.MatchLdcR4(0.11f),
+                x => x.MatchLdcR4(0.1f)))
         {
             throw new Exception("Goto Failed");
         }
@@ -227,7 +240,8 @@ public static class Hooks
             x => x.MatchLdloc(16),
             x => x.MatchLdloc(16),
             x => x.MatchLdfld<PlayerGraphics.TailSpeckles>("spearProg"),
-            x => x.MatchLdcR4(1)))
+            x => x.MatchLdcR4(1.0f),
+            x => x.MatchLdcR4(0.05f)))
         {
             throw new Exception("Goto Failed");
         }
