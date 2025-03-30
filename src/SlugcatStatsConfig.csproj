@@ -1,102 +1,98 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net48</TargetFramework>
-    <ImplicitUsings>disable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <LangVersion>latest</LangVersion>
-  </PropertyGroup>
+    <PropertyGroup>
+        <!-- Project Specific -->
+        <TargetFramework>net48</TargetFramework>
 
-  <ItemGroup>
-    <Reference Include="Assembly-CSharp">
-      <HintPath>..\..\..\Backups\Rain World\Rain World References\BepInEx\utils\PUBLIC-Assembly-CSharp.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="BepInEx">
-      <HintPath>..\..\..\Backups\Rain World\Rain World References\BepInEx\core\BepInEx.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="HOOKS-Assembly-CSharp">
-      <HintPath>..\..\..\Backups\Rain World\Rain World References\BepInEx\plugins\HOOKS-Assembly-CSharp.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Mono.Cecil">
-      <HintPath>..\..\..\Backups\Rain World\Rain World References\RainWorld_Data\Managed\Mono.Cecil.dll</HintPath>
-    </Reference>
-    <Reference Include="MonoMod">
-      <HintPath>..\..\..\Backups\Rain World\Rain World References\BepInEx\core\MonoMod.dll</HintPath>
-    </Reference>
-    <Reference Include="MonoMod.RuntimeDetour">
-      <HintPath>..\..\..\Backups\Rain World\Rain World References\RainWorld_Data\Managed\MonoMod.RuntimeDetour.dll</HintPath>
-    </Reference>
-    <Reference Include="MonoMod.Utils">
-      <HintPath>..\..\..\Backups\Rain World\Rain World References\RainWorld_Data\Managed\MonoMod.Utils.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine">
-      <HintPath>..\..\..\Backups\Rain World\Rain World References\RainWorld_Data\Managed\UnityEngine.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-	<Reference Include="UnityEngine.CoreModule">
-		<HintPath>..\..\..\Backups\Rain World\Rain World References\RainWorld_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
-		<Private>False</Private>
-	</Reference>
-  </ItemGroup>
+        <!-- Global -->
+        <LangVersion>latest</LangVersion>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <AppOutputBase>$(MSBuildProjectDirectory)\</AppOutputBase>
+        <PathMap>$(AppOutputBase)=SlugcatStatsConfig</PathMap>
+    </PropertyGroup>
 
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="copy /Y &quot;$(TargetPath)&quot; &quot;C:\Program Files (x86)\Steam\steamapps\common\Rain World Modded\RainWorld_Data\StreamingAssets\mods\slugcatstatsconfig\plugins&quot;" />
-  </Target>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+        <DebugType>portable</DebugType>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <Reference Update="System">
-      <Private>False</Private>
-    </Reference>
-  </ItemGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+        <DebugType>portable</DebugType>
+        <DebugSymbols>true</DebugSymbols>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <Reference Update="System.Core">
-      <Private>False</Private>
-    </Reference>
-  </ItemGroup>
+    <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+        <Exec Command="copy /Y &quot;$(TargetDir)&quot; &quot;C:\Program Files (x86)\Steam\steamapps\common\Rain World\RainWorld_Data\StreamingAssets\mods\slugcatstatsconfig\newest\plugins&quot;" />
+    </Target>
 
-  <ItemGroup>
-    <Reference Update="System.Data">
-      <Private>False</Private>
-    </Reference>
-  </ItemGroup>
+    <ItemGroup>
+        <Reference Include="PUBLIC-Assembly-CSharp">
+        <HintPath>lib\BepInEx\utils\PUBLIC-Assembly-CSharp.dll</HintPath>
+        <Private>False</Private>
+        </Reference>
+        <Reference Include="HOOKS-Assembly-CSharp">
+        <HintPath>lib\BepInEx\plugins\HOOKS-Assembly-CSharp.dll</HintPath>
+        <Private>False</Private>
+        </Reference>
+        <Reference Include="BepInEx">
+        <HintPath>lib\BepInEx\core\BepInEx.dll</HintPath>
+        <Private>False</Private>
+        </Reference>
+        <Reference Include="Mono.Cecil">
+        <HintPath>lib\Managed\Mono.Cecil.dll</HintPath>
+        <Private>False</Private>
+        </Reference>
+        <Reference Include="MonoMod">
+        <HintPath>lib\BepInEx\core\MonoMod.dll</HintPath>
+        <Private>False</Private>
+        </Reference>
+        <Reference Include="MonoMod.RuntimeDetour">
+        <HintPath>lib\Managed\MonoMod.RuntimeDetour.dll</HintPath>
+        <Private>False</Private>
+        </Reference>
+        <Reference Include="MonoMod.Utils">
+        <HintPath>lib\Managed\MonoMod.Utils.dll</HintPath>
+        <Private>False</Private>
+        </Reference>
+        <Reference Include="Rain Meadow">
+        <HintPath>lib\Rain Meadow.dll</HintPath>
+        <Private>False</Private>
+        </Reference>
+        <Reference Include="Unity.Mathematics">
+        <HintPath>lib\Managed\Unity.Mathematics.dll</HintPath>
+        <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine">
+        <HintPath>lib\Managed\UnityEngine.dll</HintPath>
+        <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.AudioModule">
+        <HintPath>lib\Managed\UnityEngine.AudioModule.dll</HintPath>
+        <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.CoreModule">
+        <HintPath>lib\Managed\UnityEngine.CoreModule.dll</HintPath>
+        <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.ImageConversionModule">
+        <HintPath>lib\Managed\UnityEngine.ImageConversionModule.dll</HintPath>
+        <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.InputLegacyModule">
+        <HintPath>lib\Managed\UnityEngine.InputLegacyModule.dll</HintPath>
+        <Private>False</Private>
+        </Reference>
+    </ItemGroup>
 
-  <ItemGroup>
-    <Reference Update="System.Drawing">
-      <Private>False</Private>
-    </Reference>
-  </ItemGroup>
+    <ItemGroup>
+        <Compile Remove="lib\**" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <Reference Update="System.IO.Compression.FileSystem">
-      <Private>False</Private>
-    </Reference>
-  </ItemGroup>
+    <ItemGroup>
+        <EmbeddedResource Remove="lib\**" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <Reference Update="System.Numerics">
-      <Private>False</Private>
-    </Reference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Update="System.Runtime.Serialization">
-      <Private>False</Private>
-    </Reference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Update="System.Xml">
-      <Private>False</Private>
-    </Reference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Update="System.Xml.Linq">
-      <Private>False</Private>
-    </Reference>
-  </ItemGroup>
+    <ItemGroup>
+        <None Remove="lib\**" />
+    </ItemGroup>
 </Project>

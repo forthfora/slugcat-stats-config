@@ -8,23 +8,22 @@ using System.Security;
 [module: UnverifiableCode]
 #pragma warning restore CS0618 // Type or member is obsolete
 
+namespace SlugcatStatsConfig;
 
-namespace SlugcatStatsConfig
+[BepInPlugin(MOD_ID, MOD_ID, "1.1.0")]
+internal class Plugin : BaseUnityPlugin
 {
-    [BepInPlugin(AUTHOR + "." + MOD_ID, MOD_NAME, VERSION)]
-    internal class Plugin : BaseUnityPlugin
+    public const string MOD_ID = "slugcatstatsconfig";
+
+    public static string ModName { get; set; } = "";
+    public static string Version { get; set; } = "";
+    public static string Authors { get; set; } = "";
+
+    public new static ManualLogSource Logger { get; private set; } = null!;
+
+    public void OnEnable()
     {
-        public static new ManualLogSource Logger { get; private set; } = null!;
-
-        public const string VERSION = "1.0.4";
-        public const string MOD_NAME = "Slugcat Stats Config";
-        public const string MOD_ID = "slugcatstatsconfig";
-        public const string AUTHOR = "forthbridge";
-
-        public void OnEnable()
-        {
-            Logger = base.Logger;
-            Hooks.ApplyHooks();
-        }
+        Logger = base.Logger;
+        Hooks.ApplyHooks();
     }
 }

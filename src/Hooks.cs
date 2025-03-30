@@ -1,227 +1,246 @@
 ﻿using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using RWCustom;
-using System;
 using UnityEngine;
 
-namespace SlugcatStatsConfig
+namespace SlugcatStatsConfig;
+
+public static class Hooks
 {
-    internal static class Hooks
+    private static bool IsInit { get; set; }
+
+    private static void RainWorld_OnModsInit(On.RainWorld.orig_OnModsInit orig, RainWorld self)
     {
-        public static void ApplyHooks()
+        try
         {
-            On.RainWorld.OnModsInit += RainWorld_OnModsInit;
+            ModOptions.RegisterOI();
 
-            On.SlugcatStats.ctor += SlugcatStats_ctor;
-            On.SlugcatStats.SlugcatFoodMeter += SlugcatStats_SlugcatFoodMeter;
+            if (IsInit)
+            {
+                return;
+            }
 
-            On.SlugcatStats.SlugcatCanMaul += SlugcatStats_SlugcatCanMaul;
-            On.SlugcatStats.AutoGrabBatflys += SlugcatStats_AutoGrabBatflys;
+            IsInit = true;
 
-            On.SlugcatStats.SpearSpawnModifier += SlugcatStats_SpearSpawnModifier;
-            On.SlugcatStats.SpearSpawnElectricRandomChance += SlugcatStats_SpearSpawnElectricRandomChance;
-            On.SlugcatStats.SpearSpawnExplosiveRandomChance += SlugcatStats_SpearSpawnExplosiveRandomChance;
 
-            On.Player.Jump += Player_Jump;
-            On.Player.Update += Player_Update;
-            On.Player.PyroDeathThreshold += Player_PyroDeathThreshold;
+            // Init Info
+            var mod = ModManager.ActiveMods.FirstOrDefault(mod => mod.id == Plugin.MOD_ID);
+
+            if (mod is null)
+            {
+                Plugin.Logger.LogError($"Failed to initialize: ID '{Plugin.MOD_ID}' wasn't found in the active mods list!");
+                return;
+            }
+
+            Plugin.ModName = mod.name;
+            Plugin.Version = mod.version;
+            Plugin.Authors = mod.authors;
+
+            ApplyHooks();
         }
-
-        private static bool isInit = false;
-
-        private static void RainWorld_OnModsInit(On.RainWorld.orig_OnModsInit orig, RainWorld self)
+        catch (Exception e)
         {
-            try
-            {
-                if (isInit) return;
-                isInit = true;
-
-                MachineConnector.SetRegisteredOI(Plugin.MOD_ID, Options.instance);
-
-                IL.Player.GrabUpdate += Player_GrabUpdate;
-            }
-            catch (Exception e)
-            {
-                Plugin.Logger.LogWarning(e);
-            }
-            finally
-            {
-                orig(self);
-            }
+            Plugin.Logger.LogError($"OnModsInit:\n{e}");
         }
-
-
-
-        private static void SlugcatStats_ctor(On.SlugcatStats.orig_ctor orig, SlugcatStats self, SlugcatStats.Name slugcat, bool malnourished)
+        finally
         {
-            orig(self, slugcat, malnourished);
-
-            // General
-            if (Options.throwingSkill.Value > 0.0f) self.throwingSkill = Options.throwingSkill.Value;
-            if (Options.lungsFac.Value > 0.0f) self.lungsFac = Options.lungsFac.Value;
-            if (Options.bodyWeightFac.Value > 0.0f) self.bodyWeightFac = Options.bodyWeightFac.Value;
-            
-            // Speed
-            if (Options.runspeedFac.Value > 0.0f) self.runspeedFac = Options.runspeedFac.Value;
-            if (Options.poleClimbSpeedFac.Value > 0.0f) self.poleClimbSpeedFac = Options.poleClimbSpeedFac.Value;
-            if (Options.corridorClimbSpeedFac.Value > 0.0f) self.corridorClimbSpeedFac = Options.corridorClimbSpeedFac.Value;
-
-            // Stealth
-            if (Options.generalVisibilityBonus.Value > -1.1f) self.generalVisibilityBonus = Options.generalVisibilityBonus.Value;
-            if (Options.visualStealthInSneakMode.Value > 0.0f) self.visualStealthInSneakMode = Options.visualStealthInSneakMode.Value;
-            if (Options.loudnessFac.Value > 0.0f) self.loudnessFac = Options.loudnessFac.Value;
-
-            if (malnourished) MalnourishedStats(self, slugcat);
+            orig(self);
         }
+    }
 
-        private static void MalnourishedStats(SlugcatStats self, SlugcatStats.Name slugcat)
+    public static void ApplyHooks()
+    {
+        On.RainWorld.OnModsInit += RainWorld_OnModsInit;
+
+        On.SlugcatStats.ctor += SlugcatStats_ctor;
+        On.SlugcatStats.SlugcatFoodMeter += SlugcatStats_SlugcatFoodMeter;
+
+        On.SlugcatStats.SlugcatCanMaul += SlugcatStats_SlugcatCanMaul;
+        On.SlugcatStats.AutoGrabBatflys += SlugcatStats_AutoGrabBatflys;
+
+        On.SlugcatStats.SpearSpawnModifier_Timeline_float += SlugcatStats_SpearSpawnModifier;
+        On.SlugcatStats.SpearSpawnElectricRandomChance_Timeline += SlugcatStats_SpearSpawnElectricRandomChance;
+        On.SlugcatStats.SpearSpawnExplosiveRandomChance_Timeline += SlugcatStats_SpearSpawnExplosiveRandomChance;
+
+        On.Player.Jump += Player_Jump;
+        On.Player.Update += Player_Update;
+        On.Player.PyroDeathThreshold += Player_PyroDeathThreshold;
+
+        try
         {
-            // General
-            if (Options.throwingSkillStarving.Value > 0.0f) self.throwingSkill = Options.throwingSkillStarving.Value;
-            if (Options.bodyWeightFacStarving.Value > 0.0f) self.bodyWeightFac = Options.bodyWeightFacStarving.Value;
-
-            // Speed
-            if (Options.runspeedFacStarving.Value > 0.0f) self.runspeedFac = Options.runspeedFacStarving.Value;
-            if (Options.poleClimbSpeedFacStarving.Value > 0.0f) self.poleClimbSpeedFac = Options.poleClimbSpeedFacStarving.Value;
-            if (Options.corridorClimbSpeedFacStarving.Value > 0.0f) self.corridorClimbSpeedFac = Options.corridorClimbSpeedFacStarving.Value;
+            IL.Player.GrabUpdate += Player_GrabUpdate;
         }
-
-        private static IntVector2 SlugcatStats_SlugcatFoodMeter(On.SlugcatStats.orig_SlugcatFoodMeter orig, SlugcatStats.Name slugcat)
+        catch (Exception e)
         {
-            IntVector2 food = orig(slugcat);
+            Plugin.Logger.LogError($"Failed to IL Hook Player.Update:\n{e}");
+        }
+    }
 
-            if (slugcat == MoreSlugcats.MoreSlugcatsEnums.SlugcatStatsName.Slugpup)
+    private static void SlugcatStats_ctor(On.SlugcatStats.orig_ctor orig, SlugcatStats self, SlugcatStats.Name slugcat, bool malnourished)
+    {
+        orig(self, slugcat, malnourished);
+
+        // General
+        if (ModOptions.throwingSkill.Value > 0.0f) self.throwingSkill = ModOptions.throwingSkill.Value;
+        if (ModOptions.lungsFac.Value > 0.0f) self.lungsFac = ModOptions.lungsFac.Value;
+        if (ModOptions.bodyWeightFac.Value > 0.0f) self.bodyWeightFac = ModOptions.bodyWeightFac.Value;
+
+        // Speed
+        if (ModOptions.runspeedFac.Value > 0.0f) self.runspeedFac = ModOptions.runspeedFac.Value;
+        if (ModOptions.poleClimbSpeedFac.Value > 0.0f) self.poleClimbSpeedFac = ModOptions.poleClimbSpeedFac.Value;
+        if (ModOptions.corridorClimbSpeedFac.Value > 0.0f) self.corridorClimbSpeedFac = ModOptions.corridorClimbSpeedFac.Value;
+
+        // Stealth
+        if (ModOptions.generalVisibilityBonus.Value > -1.1f) self.generalVisibilityBonus = ModOptions.generalVisibilityBonus.Value;
+        if (ModOptions.visualStealthInSneakMode.Value > 0.0f) self.visualStealthInSneakMode = ModOptions.visualStealthInSneakMode.Value;
+        if (ModOptions.loudnessFac.Value > 0.0f) self.loudnessFac = ModOptions.loudnessFac.Value;
+
+        if (malnourished) MalnourishedStats(self, slugcat);
+    }
+
+    private static void MalnourishedStats(SlugcatStats self, SlugcatStats.Name _)
+    {
+        // General
+        if (ModOptions.throwingSkillStarving.Value > 0.0f) self.throwingSkill = ModOptions.throwingSkillStarving.Value;
+        if (ModOptions.bodyWeightFacStarving.Value > 0.0f) self.bodyWeightFac = ModOptions.bodyWeightFacStarving.Value;
+
+        // Speed
+        if (ModOptions.runspeedFacStarving.Value > 0.0f) self.runspeedFac = ModOptions.runspeedFacStarving.Value;
+        if (ModOptions.poleClimbSpeedFacStarving.Value > 0.0f) self.poleClimbSpeedFac = ModOptions.poleClimbSpeedFacStarving.Value;
+        if (ModOptions.corridorClimbSpeedFacStarving.Value > 0.0f) self.corridorClimbSpeedFac = ModOptions.corridorClimbSpeedFacStarving.Value;
+    }
+
+    private static IntVector2 SlugcatStats_SlugcatFoodMeter(On.SlugcatStats.orig_SlugcatFoodMeter orig, SlugcatStats.Name slugcat)
+    {
+        var food = orig(slugcat);
+
+        if (slugcat == MoreSlugcats.MoreSlugcatsEnums.SlugcatStatsName.Slugpup)
+        {
+            if (ModOptions.slugpupHibernationFood.Value > 0)
             {
-                if (Options.slugpupHibernationFood.Value > 0)
-                {
-                    food.y = Options.slugpupHibernationFood.Value;
-                }
-
-                int slugpupExtraFood = food.x - food.y;
-
-                if (Options.slugpupExtraFood.Value >= 0)
-                {
-                    slugpupExtraFood = Options.slugpupExtraFood.Value;
-                }
-
-                food.x = food.y + slugpupExtraFood;
-
-                return food;
+                food.y = ModOptions.slugpupHibernationFood.Value;
             }
 
-            if (Options.hibernationFood.Value > 0)
+            var slugpupExtraFood = food.x - food.y;
+
+            if (ModOptions.slugpupExtraFood.Value >= 0)
             {
-                food.y = Options.hibernationFood.Value;
+                slugpupExtraFood = ModOptions.slugpupExtraFood.Value;
             }
 
-            int extraFood = food.x - food.y;
-
-            if (Options.extraFood.Value >= 0)
-            {
-                extraFood = Options.extraFood.Value;
-            }
-
-            food.x = food.y + extraFood;
+            food.x = food.y + slugpupExtraFood;
 
             return food;
         }
 
-
-
-        private static float SlugcatStats_SpearSpawnExplosiveRandomChance(On.SlugcatStats.orig_SpearSpawnExplosiveRandomChance orig, SlugcatStats.Name index)
+        if (ModOptions.hibernationFood.Value > 0)
         {
-            if (Options.explosiveSpearSpawnChance.Value >= 0.0f) return Options.explosiveSpearSpawnChance.Value;
-
-            return orig(index);
+            food.y = ModOptions.hibernationFood.Value;
         }
 
-        private static float SlugcatStats_SpearSpawnElectricRandomChance(On.SlugcatStats.orig_SpearSpawnElectricRandomChance orig, SlugcatStats.Name index)
-        {
-            if (Options.electricSpearSpawnChance.Value >= 0.0f) return Options.electricSpearSpawnChance.Value;
+        var extraFood = food.x - food.y;
 
-            return orig(index);
+        if (ModOptions.extraFood.Value >= 0)
+        {
+            extraFood = ModOptions.extraFood.Value;
         }
 
-        private static float SlugcatStats_SpearSpawnModifier(On.SlugcatStats.orig_SpearSpawnModifier orig, SlugcatStats.Name index, float originalSpearChance)
-        {
-            if (Options.spearSpawnChanceModifier.Value >= 0.0f) return Mathf.Pow(originalSpearChance, Options.spearSpawnChanceModifier.Value);
+        food.x = food.y + extraFood;
 
-            return orig(index, originalSpearChance);
-        }
-
-        private static bool SlugcatStats_AutoGrabBatflys(On.SlugcatStats.orig_AutoGrabBatflys orig, SlugcatStats.Name slugcatNum)
-        {
-            if (Options.autoGrabBatflies.Value) return true;
-
-            return orig(slugcatNum);
-        }
-
-        private static bool SlugcatStats_SlugcatCanMaul(On.SlugcatStats.orig_SlugcatCanMaul orig, SlugcatStats.Name slugcatNum)
-        {
-            if (Options.canMaul.Value) return true;
-
-            return orig(slugcatNum);
-        }
+        return food;
+    }
 
 
 
-        // Glow
-        private static void Player_Update(On.Player.orig_Update orig, Player self, bool eu)
-        {
-            orig(self, eu);
+    private static float SlugcatStats_SpearSpawnExplosiveRandomChance(On.SlugcatStats.orig_SpearSpawnExplosiveRandomChance_Timeline orig, SlugcatStats.Timeline timeline)
+    {
+        if (ModOptions.explosiveSpearSpawnChance.Value >= 0.0f) return ModOptions.explosiveSpearSpawnChance.Value;
 
-            if (Options.forceGlow.Value) self.glowing = true;
-        }
+        return orig(timeline);
+    }
+
+    private static float SlugcatStats_SpearSpawnElectricRandomChance(On.SlugcatStats.orig_SpearSpawnElectricRandomChance_Timeline orig, SlugcatStats.Timeline timeline)
+    {
+        if (ModOptions.electricSpearSpawnChance.Value >= 0.0f) return ModOptions.electricSpearSpawnChance.Value;
+
+        return orig(timeline);
+    }
+
+    private static float SlugcatStats_SpearSpawnModifier(On.SlugcatStats.orig_SpearSpawnModifier_Timeline_float orig, SlugcatStats.Timeline timeline, float originalSpearChance)
+    {
+        if (ModOptions.spearSpawnChanceModifier.Value >= 0.0f) return Mathf.Pow(originalSpearChance, ModOptions.spearSpawnChanceModifier.Value);
+
+        return orig(timeline, originalSpearChance);
+    }
+
+    private static bool SlugcatStats_AutoGrabBatflys(On.SlugcatStats.orig_AutoGrabBatflys orig, SlugcatStats.Name slugcatNum)
+    {
+        if (ModOptions.autoGrabBatflies.Value) return true;
+
+        return orig(slugcatNum);
+    }
+
+    private static bool SlugcatStats_SlugcatCanMaul(On.SlugcatStats.orig_SlugcatCanMaul orig, SlugcatStats.Name slugcatNum)
+    {
+        if (ModOptions.canMaul.Value) return true;
+
+        return orig(slugcatNum);
+    }
 
 
-        // Jump Boost
-        private static void Player_Jump(On.Player.orig_Jump orig, Player self)
-        {
-            orig(self);
+    // Glow
+    private static void Player_Update(On.Player.orig_Update orig, Player self, bool eu)
+    {
+        orig(self, eu);
 
-            if (Options.extraJumpBoost.Value > -10.1f) self.jumpBoost += Options.extraJumpBoost.Value;
-        }
+        if (ModOptions.forceGlow.Value) self.glowing = true;
+    }
 
+    // Jump Boost
+    private static void Player_Jump(On.Player.orig_Jump orig, Player self)
+    {
+        orig(self);
 
-        // Needle Extraction Speed
-        private static void Player_GrabUpdate(ILContext il)
-        {
-            ILCursor c = new ILCursor(il);
+        if (ModOptions.extraJumpBoost.Value > -10.1f) self.jumpBoost += ModOptions.extraJumpBoost.Value;
+    }
 
-            // First 10% Extraction Speed
-            c.GotoNext(MoveType.After,
+    // Needle Extraction Speed
+    private static void Player_GrabUpdate(ILContext il)
+    {
+        var c = new ILCursor(il);
+
+        // First 10% Extraction Speed
+        if (!c.TryGotoNext(MoveType.After,
                 x => x.MatchLdloc(16),
                 x => x.MatchLdloc(16),
                 x => x.MatchLdfld<PlayerGraphics.TailSpeckles>("spearProg"),
-                x => x.MatchLdcR4(0.11f));
-
-            c.Remove();
-
-            c.Emit(OpCodes.Ldarg_0);
-            c.EmitDelegate<Func<Player, float>>((player) => Options.instantNeedles.Value ? 1.0f : (Options.needleExtractSpeedFirst.Value / 100.0f) * 0.1f);
-
-
-            // Rest of Extraction Speed
-            c.GotoNext(MoveType.After,
-                x => x.MatchLdloc(16),
-                x => x.MatchLdloc(16),
-                x => x.MatchLdfld<PlayerGraphics.TailSpeckles>("spearProg"),
-                x => x.MatchLdcR4(1));
-
-            c.Remove();
-
-            c.Emit(OpCodes.Ldarg_0);
-            c.EmitDelegate<Func<Player, float>>((player) => Options.instantNeedles.Value ? 1.0f : (Options.needleExtractSpeedLast.Value / 100.0f) * 0.05f);
-        }
-
-
-        // Artificer Drowning
-        private static float Player_PyroDeathThreshold(On.Player.orig_PyroDeathThreshold orig, RainWorldGame game)
+                x => x.MatchLdcR4(0.11f)))
         {
-            if (Options.pyroDeathThreshold.Value < 0.0) return orig(game);
-
-            return Options.pyroDeathThreshold.Value;
+            throw new Exception("Goto Failed");
         }
+
+        c.Emit(OpCodes.Pop);
+        c.EmitDelegate<Func<float>>(() => ModOptions.instantNeedles.Value ? 1.0f : (ModOptions.needleExtractSpeedFirst.Value / 100.0f) * 0.1f);
+
+        // Rest of Extraction Speed
+        if (!c.TryGotoNext(MoveType.After,
+            x => x.MatchLdloc(16),
+            x => x.MatchLdloc(16),
+            x => x.MatchLdfld<PlayerGraphics.TailSpeckles>("spearProg"),
+            x => x.MatchLdcR4(1)))
+        {
+            throw new Exception("Goto Failed");
+        }
+
+        c.Emit(OpCodes.Pop);
+        c.EmitDelegate<Func<float>>(() => ModOptions.instantNeedles.Value ? 1.0f : (ModOptions.needleExtractSpeedLast.Value / 100.0f) * 0.05f);
+    }
+
+    // Artificer Drowning
+    private static float Player_PyroDeathThreshold(On.Player.orig_PyroDeathThreshold orig, RainWorldGame game)
+    {
+        if (ModOptions.pyroDeathThreshold.Value < 0.0) return orig(game);
+
+        return ModOptions.pyroDeathThreshold.Value;
     }
 }
-    
