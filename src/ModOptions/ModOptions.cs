@@ -234,7 +234,7 @@ public class ModOptions : OptionsTemplate
 
         AddIntSlider(needleExtractSpeedFirst, (string)needleExtractSpeedFirst.info.Tags[0], "1%", "1000%");
         AddIntSlider(needleExtractSpeedLast, (string)needleExtractSpeedLast.info.Tags[0], "1%", "1000%");
-        DrawFloatSliders(ref Tabs[tabIndex]);
+        DrawIntSliders(ref Tabs[tabIndex]);
 
         AddNewLinesUntilEnd();
         DrawBox(ref Tabs[tabIndex]);
